@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -102,7 +102,7 @@ vim.g.have_nerd_font = false
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -741,7 +741,6 @@ require('lazy').setup({
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
       vim.cmd.colorscheme 'tokyonight-night'
-
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
     end,
@@ -815,6 +814,51 @@ require('lazy').setup({
       --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
       --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
       --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+    end,
+  },
+
+  -- #Markus
+  {
+    'ThePrimeagen/harpoon',
+    branch = 'harpoon2',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      local harpoon = require 'harpoon'
+      harpoon:setup()
+      vim.keymap.set('n', '<leader>ha', function()
+        harpoon:list():append()
+      end)
+      vim.keymap.set('n', '<leader>hh', function()
+        harpoon.ui:toggle_quick_menu(harpoon:list())
+      end)
+    end,
+  },
+  {
+    -- https://github.com/nvim-tree/nvim-tree.lua
+    'nvim-tree/nvim-tree.lua',
+    dependencies = {
+      -- https://github.com/nvim-tree/nvim-web-devicons
+      'nvim-tree/nvim-web-devicons', -- Fancy icon support
+    },
+    opts = {
+      actions = {
+        open_file = {
+          window_picker = {
+            enable = false,
+          },
+        },
+      },
+    },
+    config = function(_, opts)
+      -- Recommended settings to disable default netrw file explorer
+      vim.g.loaded_netrw = 1
+      vim.g.loaded_netrwPlugin = 1
+      require('nvim-tree').setup(opts)
+
+      -- Nvim-tree
+      vim.keymap.set('n', '<leader>ee', ':NvimTreeToggle<CR>') -- toggle file explorer
+      vim.keymap.set('n', '<leader>er', ':NvimTreeFocus<CR>') -- toggle focus to file explorer
+      vim.keymap.set('n', '<leader>ef', ':NvimTreeFindFile<CR>') -- find file in file explorer
     end,
   },
 
